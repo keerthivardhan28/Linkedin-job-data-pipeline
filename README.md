@@ -36,11 +36,11 @@ flowchart LR
 
 ### n8n Workflow Overview
 
-![n8n Workflow Overview](workflow-overview.jpg)
+![n8n Workflow Overview](./workflow-overview.jpg)
 
 ### Google Sheets Output
 
-![Google Sheets Output](google-sheets-output.jpg)
+![Google Sheets Output](./google-sheets-output.jpg)
 
 ## Technologies
 
