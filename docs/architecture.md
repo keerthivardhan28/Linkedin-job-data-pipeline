@@ -6,24 +6,19 @@ This project implements an automated job data pipeline using n8n, REST APIs, Jav
 
 ## Data Flow
 
-Schedule Trigger
-↓
-REST API
-↓
-Wait / Rate Control
-↓
-Job Data Extraction
-↓
-JavaScript Transformation
-↓
-Google Sheets Lookup
-↓
-Job ID Deduplication
-↓
-Conditional Routing
-↓
-New Job → Append to Google Sheets
-Duplicate Job → Skip
+```mermaid
+flowchart LR
+    A[Schedule Trigger] --> B[HTTP Request]
+    B --> C[Wait / Rate Control]
+    C --> D[HTTP Request 1]
+    D --> E[HTTP Request 2]
+    E --> F[JavaScript Transformation]
+    F --> G[Google Sheets Lookup]
+    G --> H[Job ID Deduplication]
+    H --> I{Job ID Exists?}
+    I -->|Yes - Duplicate| J[Skip Record]
+    I -->|No - New Job| K[Append Row to Google Sheets]
+```
 
 ## Pipeline Components
 
