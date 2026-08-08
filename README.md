@@ -19,28 +19,19 @@ The pipeline performs:
 
 ## Architecture
 
-Schedule Trigger
-        ↓
-REST API
-        ↓
-Wait / Rate Control
-        ↓
-Job Data Extraction
-        ↓
-JavaScript Transformation
-        ↓
-Google Sheets Lookup
-        ↓
-Job ID Deduplication
-        ↓
-     ┌──┴──┐
-     ↓     ↓
-Duplicate  New Job
-   Skip      ↓
-          Append
-             ↓
-       Google Sheets
+```mermaid
+flowchart LR
+    A[Schedule Trigger] --> B[REST API]
+    B --> C[Wait / Rate Control]
+    C --> D[Job Data Extraction]
+    D --> E[JavaScript Transformation]
+    E --> F[Google Sheets Lookup]
+    F --> G[Job ID Deduplication]
 
+    G -->|Job ID Exists| H[Skip Duplicate]
+    G -->|New Job ID| I[Append New Job]
+    I --> J[Google Sheets]
+```
 ## Technologies
 
 - n8n
