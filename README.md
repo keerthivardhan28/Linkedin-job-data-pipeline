@@ -32,6 +32,16 @@ flowchart LR
     G -->|New Job ID| I[Append New Job]
     I --> J[Google Sheets]
 ```
+## Workflow Screenshots
+
+### n8n Workflow Overview
+
+![n8n Workflow Overview](workflow-overview.jpg)
+
+### Google Sheets Output
+
+![Google Sheets Output](google-sheets-output.jpg)
+
 ## Technologies
 
 - n8n
