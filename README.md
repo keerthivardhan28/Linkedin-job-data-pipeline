@@ -45,11 +45,15 @@ flowchart LR
 
 ### 1. Data Ingestion
 
-Job posting data is retrieved from an external REST API.
+- Schedule Trigger initiates the workflow.
+- REST API is called to retrieve job posting data.
+- Wait node provides rate control between API requests.
 
 ### 2. Data Transformation
 
-JavaScript is used to extract and standardize important attributes such as:
+JavaScript is used to transform and standardize the API response.
+
+The following attributes are extracted and mapped:
 
 - Job Title
 - Company
@@ -63,20 +67,24 @@ JavaScript is used to extract and standardize important attributes such as:
 
 ### 3. Data Validation
 
-Incoming records are processed before loading them into the target dataset.
+Job attributes are validated and standardized before loading into the target dataset.
 
-### 4. Deduplication
+### 4. Duplicate Detection
 
-Job ID is used as the unique identifier.
+The `Job ID` is used as the unique identifier.
 
-Existing Job IDs are detected using Google Sheets lookup logic.
+The pipeline checks the existing Google Sheets records:
 
-- Existing Job ID → Skip
-- New Job ID → Append
+- **Existing Job ID → Skip record**
+- **New Job ID → Continue to loading**
 
-### 5. Data Loading
+### 5. Incremental Loading
 
-Validated new job records are incrementally appended to Google Sheets.
+Only new job records are appended to Google Sheets, preventing duplicate records during subsequent pipeline executions.
+
+### 6. Data Storage
+
+Google Sheets is used as the target data store for the processed job posting records.
 
 ## Key Data Engineering Concepts
 
