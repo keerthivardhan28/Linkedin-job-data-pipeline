@@ -1,0 +1,458 @@
+{
+  "name": "AI Job Automation Platform",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d6d66aa8-e6c7-4e33-97af-c48149cc389e",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/curious_coder~linkedin-jobs-scraper/runs",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"urls\": [\n    \"https://www.linkedin.com/jobs/search/?keywords=Data%20Engineer&location=Hyderabad%2C%20India\"\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "b414bad7-95d6-4775-8101-9b11f5ce6edb",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Tbd6vDWJzEFJcV97",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "5d858bda-6e34-424d-b999-85b485e46c00",
+      "name": "Wait",
+      "webhookId": "543f6978-0fbd-44c2-8c1a-fa1a96e6d841"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/actor-runs/{{$node[\"HTTP Request\"].json[\"data\"][\"id\"]}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "YOUR_APIFY_API_TOKEN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "48219b63-247b-49ed-b892-c30b2e888e3a",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.apify.com/v2/datasets/{{$node[\"HTTP Request1\"].json[\"data\"][\"defaultDatasetId\"]}}/items",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization ",
+              "value": "YOUR_APIFY_API_TOKEN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        832,
+        0
+      ],
+      "id": "989ffad6-faae-40b8-a50a-cde084e1cd19",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1aFFzgrQENZQtR7Q8g2zM0CuOSsFZaBBEecA4sbyTTIA",
+          "mode": "list",
+          "cachedResultName": "Job posts ft.LinkedIn",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aFFzgrQENZQtR7Q8g2zM0CuOSsFZaBBEecA4sbyTTIA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aFFzgrQENZQtR7Q8g2zM0CuOSsFZaBBEecA4sbyTTIA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Title": "={{ $('Code in JavaScript').item.json.title }}",
+            "Company": "={{ $('Code in JavaScript').item.json.companyName }}",
+            "Location": "={{ $('Code in JavaScript').item.json.location }}",
+            "Posted Date": "={{ $('Code in JavaScript').item.json.postedAt }}",
+            "LinkedIn Job URL": "={{ $('Code in JavaScript').item.json.link }}",
+            "Experience": "={{ $('Code in JavaScript').item.json.experience }}",
+            "work mode": "={{ $('Code in JavaScript').item.json.workMode }}",
+            "salary": "={{ $('Code in JavaScript').item.json.salary }}",
+            "Job ID": "={{ $('Code in JavaScript').item.json.id }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Location",
+              "displayName": "Location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Posted Date",
+              "displayName": "Posted Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LinkedIn Job URL",
+              "displayName": "LinkedIn Job URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Experience",
+              "displayName": "Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "work mode",
+              "displayName": "work mode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "salary",
+              "displayName": "salary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Job ID",
+              "displayName": "Job ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1664,
+        0
+      ],
+      "id": "c75500ba-52e2-4191-986d-51b26029608b",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ODsDtI3UFpRLwLlP",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const job = $json;\nconst text = (job.descriptionHtml || \"\").replace(/<[^>]*>/g, \" \");\n\n// Experience\nconst exp = text.match(/(\\d+\\s*[-–]\\s*\\d+\\s*years?|\\d+\\+\\s*years?|\\d+\\s*years?|freshers?)/i);\n\n// Salary\nconst salary = text.match(/(₹|Rs\\.?)\\s?[\\d,]+(?:\\s*-\\s*(₹|Rs\\.?)?\\s?[\\d,]+)?/i);\n\n// Work Mode\nconst mode = text.match(/Remote|Hybrid|Onsite|Work from Home|WFH/i);\n\n// Job Type\nconst type = text.match(/Full[- ]?Time|Part[- ]?Time|Internship|Contract|Temporary/i);\n\njob.experience = exp ? exp[0] : \"Not Mentioned\";\njob.salary = salary ? salary[0] : \"Not Mentioned\";\njob.workMode = mode ? mode[0] : \"Not Mentioned\";\njob.jobType = type ? type[0] : \"Not Mentioned\";\n\nreturn {\n  json: job\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "55cba059-bbd8-4884-95bd-ff85dcd92014",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1aFFzgrQENZQtR7Q8g2zM0CuOSsFZaBBEecA4sbyTTIA",
+          "mode": "list",
+          "cachedResultName": "Job posts ft.LinkedIn",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aFFzgrQENZQtR7Q8g2zM0CuOSsFZaBBEecA4sbyTTIA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1aFFzgrQENZQtR7Q8g2zM0CuOSsFZaBBEecA4sbyTTIA/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Job ID",
+              "lookupValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1248,
+        0
+      ],
+      "id": "b1db130b-6d51-4e84-aec5-604515efdc87",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ODsDtI3UFpRLwLlP",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "2961d246-9e27-4a98-ba56-c985072b9cf9",
+              "leftValue": "={{ $json[\"Job ID\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1456,
+        0
+      ],
+      "id": "9560f646-3c40-4524-a97f-cce5039a9ade",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "4bc1a37a-c0fb-4eff-bf28-91ce4b957f12",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5eb2d57a6ffa3a0e4fe6a7546498c10c7e3e348180b555c6a242f7bd79a998f7"
+  },
+  "nodeGroups": [],
+  "id": "mq1Ayjl0jZ4gcNiM",
+  "tags": []
+}
