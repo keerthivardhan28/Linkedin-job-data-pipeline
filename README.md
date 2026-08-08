@@ -86,6 +86,39 @@ Only new job records are appended to Google Sheets, preventing duplicate records
 
 Google Sheets is used as the target data store for the processed job posting records.
 
+## Project Structure
+
+```text
+linkedin-job-data-pipeline/
+│
+├── README.md
+├── workflow/
+│   └── linkedin-job-pipeline.json
+│
+├── screenshots/
+│   ├── workflow-overview.png
+│   ├── duplicate-detection.png
+│   └── google-sheets-output.png
+│
+└── docs/
+    └── architecture.md
+```
+
+### Workflow Export
+
+The n8n workflow can be exported as a JSON file and imported into another n8n environment.
+
+The workflow contains:
+
+- Scheduled workflow execution
+- REST API integration
+- Job data extraction
+- JavaScript-based transformation
+- Google Sheets lookup
+- Job ID-based deduplication
+- Conditional routing
+- Incremental loading
+
 ## Key Data Engineering Concepts
 
 - ETL Pipeline
