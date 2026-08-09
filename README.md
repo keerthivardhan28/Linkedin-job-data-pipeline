@@ -102,16 +102,16 @@ Google Sheets is used as the target data store for the processed job posting rec
 linkedin-job-data-pipeline/
 │
 ├── README.md
+│
 ├── workflow/
 │   └── linkedin-job-pipeline.json
 │
-├── screenshots/
-│   ├── workflow-overview.png
-│   ├── duplicate-detection.png
-│   └── google-sheets-output.png
+├── docs/
+│   └── architecture.md
 │
-└── docs/
-    └── architecture.md
+├── workflow-overview.jpg
+│
+└── google-sheets-output.jpg
 ```
 
 ### Workflow Export
